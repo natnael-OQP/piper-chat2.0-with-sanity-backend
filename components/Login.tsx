@@ -1,13 +1,39 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { GoogleLogin } from "react-google-login";
 import { FcGoogle } from "react-icons/fc";
 import backgroundImage from "../assets/bg.gif";
 import logo from "../assets/logo1.png";
 import Image from "next/image";
+import sanityClient from "@sanity/client";
 
-const Login: FC = () => {
-	const responseGoogle = (response: any) => {
-		console.log(response);
+export const config = {
+	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+	useCdn: process.env.NODE_ENV === "production",
+	token: process.env.NEXT_PUBLIC_SANITY_TOKEN,
+	apiVersion: "2022-02-22",
+};
+
+const client = sanityClient(config);
+
+interface Props {
+	setUser: Dispatch<SetStateAction<boolean>>;
+}
+
+const Login: FC<Props> = ({ setUser }) => {
+	const responseGoogle = async (response: any) => {
+		localStorage.setItem("user", JSON.stringify(response.profileObj));
+		const { name, googleId, imageUrl } = await response.profileObj;
+		setUser(true);
+		try {
+			await client.create({
+				_type: "users",
+				userName: name,
+				image: imageUrl,
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -17,6 +43,7 @@ const Login: FC = () => {
 					src={backgroundImage}
 					layout="fill"
 					objectFit="cover"
+					priority={true}
 					alt="backgroundImage"
 				/>
 			</div>
@@ -40,6 +67,7 @@ const Login: FC = () => {
 						)}
 						onSuccess={responseGoogle}
 						onFailure={responseGoogle}
+						isSignedIn={true}
 						cookiePolicy="single_host_origin"
 					/>
 				</div>
