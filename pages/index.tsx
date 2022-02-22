@@ -1,17 +1,22 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import { useState } from "react";
+import Login from "../components/Login";
+import Home from "../container/Home";
 
-const Home: NextPage = () => {
-  return (
-    <div className="flex min-h-screen flex-col  py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <h1 className="text-sky-500">hello world!</h1>
-    </div>
-  )
-}
+const App: NextPage = () => {
+	const [user, setUser] = useState<boolean>(false);
+	// login
+	if (!user) return <Login setUser={setUser} />;
+	const login = () => {
+		setUser(false);
+		localStorage.clear();
+	};
 
-export default Home
+	return (
+		<div>
+			<Home />
+		</div>
+	);
+};
+
+export default App;
