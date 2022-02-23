@@ -14,17 +14,17 @@ export const config = {
 	apiVersion: "2022-02-22",
 };
 
-const client = sanityClient(config);
+export const client = sanityClient(config);
 
 interface Props {
-	setUser: Dispatch<SetStateAction<boolean>>;
+	setUserName: Dispatch<SetStateAction<boolean>>;
 }
 
-const Login: FC<Props> = ({ setUser }) => {
+const Login: FC<Props> = ({ setUserName }) => {
 	const responseGoogle = async (response: any) => {
 		localStorage.setItem("user", JSON.stringify(response.profileObj));
 		const { name, googleId, imageUrl } = await response.profileObj;
-		setUser(true);
+		setUserName(name);
 		try {
 			await client.create({
 				_type: "users",
