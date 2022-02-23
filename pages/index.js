@@ -77,7 +77,7 @@ const Home = () => {
 				</div>
 			</div>
 			{toggleSidebar && (
-				<div className="animate-slide-in z-10 flex h-screen w-4/5 overflow-y-auto bg-white shadow-md ">
+				<div className="animate-slide-in relative z-10 flex h-screen w-4/5 overflow-y-auto bg-white shadow-md ">
 					<div className="absolute flex w-full items-center justify-end p-2">
 						<AiFillCloseCircle
 							fontSize={30}
